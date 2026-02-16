@@ -1,0 +1,120 @@
+version: 2
+
+models:
+  - name: mrt_local_bike__category_report
+    description: "This model is designed to aggregate products while preserving multiple levels of granularity to enable flexible filtering when needed."
+    columns:
+      - name: product_id
+        description: "Foreign key, unique identifier for each product."
+        tests:
+        - not_null
+        - relationships:
+            to: ref('stg_local_bike__products')
+            field: product_id
+
+      - name: brand_id 
+        description: "Foreign key to brand_id in stg_local_bike__brands, unique identifier of the brand."
+        tests:
+            - not_null
+            - relationships:
+                to: ref('stg_local_bike__brands')
+                field: brand_id
+      
+      - name: brand_name
+        description: "Name of the brand"
+        tests:
+          - not_null
+      
+      - name: category_id
+        description: "Unique identifier for each category"
+        tests:
+          - relationships:
+              to: ref('stg_local_bike__categories')
+              field: category_id
+      
+      - name: category_name
+        description: "Name of the category"
+
+      - name: model_year
+        description: "Year when product has been created"
+      
+      - name: quantity
+        description: "Total number of items sold on this date"
+
+      - name: total_amount
+        description: "Total amount sold on this date."
+      
+      - name: total_amount_discounted
+        description: "Total discounted amount sold on this date."
+      
+      - name: amount_discounted
+        description: "Discount amounted on this date"
+
+  - name: mrt_local_bike__order_daily_report
+    description: "This model is designed to aggregate orders while preserving multiple levels of granularity to enable flexible filtering when needed."
+    columns:
+      - name: order_date 
+        description: "Date when the order was placed by the customer."
+        tests:
+        - not_null
+
+      - name: order_status
+        description: "Current status of the order (1: pending, 2: processing, 3: completed, 4: cancelled)."
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3, 4]
+              quote: false
+
+      - name: is_shipped
+        description: "Indicates if order has been shipped or not"
+  
+      - name: store_id
+        description: "Foreign key linking the order to the store where it was placed."
+        tests:
+        - not_null
+        - relationships:
+            name: store_id_foreign_key_in_stg_local_bike__orders
+            to: ref('stg_local_bike__stores')
+            field: store_id
+      
+      - name: store_name
+        description: "Name of the store."
+      
+      - name: city
+        description: "City where the store is located."
+      
+      - name: state
+        description: "State where the store is located."
+      
+      - name: staff_id
+        description: "Foreign key linking the order to the staff member responsible for handling it."
+        tests:
+        - not_null
+        - relationships:
+            name: staff_id_foreign_key_in_stg_local_bike__orders
+            to: ref('stg_local_bike__staffs')
+            field: staff_id
+      
+      - name: full_name
+        description: "Concatenation of first name and last name of staff"
+
+      - name: active
+        description: "Indicator if the staff member is active (1) or inactive (0)."
+        tests:
+        - accepted_values:
+              values: [0, 1]
+              quote: false  
+      
+      - name: quantity
+        description: "Total number of items sold on this date"
+
+      - name: total_amount
+        description: "Total amount sold on this date."
+      
+      - name: total_amount_discounted
+        description: "Total discounted amount sold on this date."
+      
+      - name: amount_discounted
+        description: "Discount amounted on this date"
+      
