@@ -1,0 +1,94 @@
+version: 2
+
+models:
+  - name: stg_local_bike__brands
+    description: "This model contains detailed informations about brands"
+    columns:
+      - name: brand_id
+        description: "Primary key, unique identifier for each brand."
+        tests:
+            - unique
+            - not_null
+      - name: brand_name
+        description: "Name of the brand"
+        tests:
+          - not_null
+
+  - name: stg_local_bike__categories
+    description: "This model contains detailed informations about categories"
+    columns:
+      - name: category_id
+        description: "Primary key, unique identifier for each category."
+        tests:
+            - unique
+            - not_null
+      - name: category_name
+        description: "Name of the category"
+        tests:
+          - not_null
+
+  - name: stg_local_bike__products
+    description: "This model contains detailed informations about products."
+    columns:
+      - name: product_id
+        description: "Primary key, unique identifier for each product."
+        tests:
+            - unique
+            - not_null
+
+      - name: product_name
+        description: "Name of the product"
+        tests:
+          - not_null
+
+      - name: brand_id 
+        description: "Foreign key to brand_id in stg_local_bike__brands, unique identifier of the brand."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_local_bike__brands')
+              field: brand_id
+
+      - name: category_id
+        description: "Foreign key to category_id in stg_local_bike__categories, unique identifier of the brand."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_local_bike__categories')
+              field: category_id
+
+      - name: model_year
+        description: "Year when product has been created."
+        tests:
+          - not_null
+          
+      - name: list_price
+        description: "Price of a product."
+        tests:
+          - not_null
+
+  - name: stg_local_bike__stocks
+    description: "This model contains detailed informations about stocks"
+    columns:
+      - name: stock_id
+        description: "Primary key, unique identifier for each stock. Generated from concatenation of store_id and product_id"
+        tests:
+          - unique
+          - not_null
+      - name: store_id 
+        description: "Foreign key to store_id in stg_local_bike__stores, unique identifier of the store. "
+        tests:
+          - relationships:
+              to: ref('stg_local_bike__stores')
+              field: store_id
+      - name: product_id 
+        description: "Foreign key to store_id in stg_local_bike__products, unique identifier of the product. "
+        tests:
+          - relationships:
+              to: ref('stg_local_bike__products')
+              field: product_id
+      - name: quantity
+        description: "Quantity of a specific product available in each store"
+        tests: 
+          - not_null
+
