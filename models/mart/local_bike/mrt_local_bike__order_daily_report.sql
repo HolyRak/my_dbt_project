@@ -2,7 +2,7 @@ select
 
   order_date,
   order_status,
-  shipped_date IS NOT NULL AS is_shipped,
+  if(shipped_date != 'NULL', true, false) as is_shipped,  
   store_id, 
   store_name,
   city,
