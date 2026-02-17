@@ -11,7 +11,7 @@ with product_sell as (
         sum(quantity) as quantity_sold, 
         round(sum(amount_without_discount),1) as amount_sold_without_discount,
         round(sum(amount_with_discount),1) as amount_sold_with_discount,
-        round(sum(discounted_amount),1) as discounted_amount
+        round(sum(amount_without_discount) -sum(amount_with_discount),1) as amount_discounted
 
     from {{ref('int_local_bike__order_items_enriched')}}
     group by 1,2,3,4,5,6
@@ -28,6 +28,6 @@ select
   quantity_sold,
   amount_sold_without_discount,
   amount_sold_with_discount,
-  discounted_amount
+  amount_discounted
 
 from product_sell
