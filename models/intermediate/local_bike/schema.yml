@@ -10,6 +10,19 @@ models:
           - unique
           - not_null
 
+      - name: order_date
+        description: "Date when the order was placed by the customer."
+        tests:
+          - not_null
+
+      - name: customer_id
+        description: "Foreign key linking the feedback to the corresponding customer"
+        tests:
+          - relationships:
+              name: customer_id_foreign_key_in_stg_sales_database__orders
+              to: ref('stg_local_bike__customers')
+              field: customer_id
+
       - name: order_id
         description: "Foreign key linking the item to the corresponding order."
         tests:
@@ -17,6 +30,48 @@ models:
               name: order_id_foreign_key_in_stg_local_bike__orders_item
               to: ref('stg_local_bike__orders')
               field: order_id
+
+      - name: order_status
+        description: "Current status of the order (1: pending, 2: processing, 3: completed, 4: cancelled)."
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3, 4]
+              quote: false
+
+      - name: required_date
+        description: "Requested delivery date specified for the order."
+
+      - name: shipped_date
+        description: "Date when the order was shipped to the customer. Null if the order has not been shipped yet."
+
+      - name: store_id
+        description: "Foreign key linking the order to the store where it was placed."
+        tests:
+        - not_null
+        - relationships:
+            name: store_id_foreign_key_in_stg_local_bike__orders
+            to: ref('stg_local_bike__stores')
+            field: store_id
+
+      - name: staff_id
+        description: "Foreign key linking the order to the staff member responsible for handling it."
+        tests:
+        - not_null
+        - relationships:
+            name: staff_id_foreign_key_in_stg_local_bike__orders
+            to: ref('stg_local_bike__staffs')
+            field: staff_id
+
+      - name: full_name
+        description: "Concatenation of first name and last name of staff"
+
+      - name: active
+        description: "Indicator if the staff member is active (1) or inactive (0)."
+        tests:
+        - accepted_values:
+              values: [0, 1]
+              quote: false  
 
       - name: item_id
         description: "Identifier for the item line within the order. Can be used to order items sequentially within the same order."
@@ -31,6 +86,9 @@ models:
               name: product_id_foreign_key_in_stg_local_bike__order_items
               to: ref('stg_local_bike__products')
               field: product_id
+      
+      - name: stock
+        description: "Stock of a specific product available in each store"
 
       - name: quantity
         description: "Number of units of the product ordered in this order item."
